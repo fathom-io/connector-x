@@ -1,9 +1,11 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
 use r2d2_oracle::oracle::sql_type::OracleType;
+use rust_decimal::Decimal;
 
 #[derive(Copy, Clone, Debug)]
 pub enum OracleTypeSystem {
     NumInt(bool),
+    NumDecimal(bool),
     Float(bool),
     NumFloat(bool),
     BinaryFloat(bool),
@@ -30,6 +32,7 @@ impl_typesystem! {
     system = OracleTypeSystem,
     mappings = {
         { NumInt => i64 }
+        { NumDecimal => Decimal }
         { Float | NumFloat | BinaryFloat | BinaryDouble => f64 }
         { Blob | Raw  => Vec<u8> }
         { Clob | VarChar | Char | NVarChar | NChar | IntervalDS | IntervalYM => String }
@@ -44,7 +47,7 @@ impl<'a> From<&'a OracleType> for OracleTypeSystem {
         match ty {
             OracleType::Number(0, 0) => NumFloat(true),
             OracleType::Number(_, 0) => NumInt(true),
-            OracleType::Number(_, _) => NumFloat(true),
+            OracleType::Number(_, _) => NumDecimal(true),
             OracleType::Float(_) => Float(true),
             OracleType::BinaryFloat => BinaryFloat(true),
             OracleType::BinaryDouble => BinaryDouble(true),
