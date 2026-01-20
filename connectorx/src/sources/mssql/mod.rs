@@ -18,7 +18,7 @@ use bb8::{Pool, PooledConnection};
 use bb8_tiberius::ConnectionManager;
 use chrono::{DateTime, Utc};
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use fehler::{throw, throws};
+use culpa::{throw, throws};
 use futures::StreamExt;
 use log::debug;
 use owning_ref::OwningHandle;
@@ -30,7 +30,7 @@ use tiberius::{AuthMethod, Config, EncryptionLevel, QueryItem, QueryStream, Row}
 use tokio::runtime::{Handle, Runtime};
 use url::Url;
 use urlencoding::decode;
-use uuid_old::Uuid;
+use uuid::Uuid;
 
 type Conn<'a> = PooledConnection<'a, ConnectionManager>;
 pub struct MsSQLSource {

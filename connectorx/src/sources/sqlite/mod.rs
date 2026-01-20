@@ -13,8 +13,8 @@ use crate::{
 };
 use anyhow::anyhow;
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use culpa::{throw, throws};
 use fallible_streaming_iterator::FallibleStreamingIterator;
-use fehler::{throw, throws};
 use log::debug;
 use owning_ref::OwningHandle;
 use r2d2::{Pool, PooledConnection};
