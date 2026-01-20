@@ -21,6 +21,11 @@ pub enum OracleTypeSystem {
     TimestampTz(bool),
     TimestampNano(bool),
     TimestampTzNano(bool),
+    TimestampLTZ(bool),
+    TimestampLTZNano(bool),
+    IntervalDS(bool),
+    IntervalYM(bool),
+    Raw(bool),
 }
 
 impl_typesystem! {
@@ -29,10 +34,10 @@ impl_typesystem! {
         { NumInt => i64 }
         { NumDecimal => Decimal }
         { Float | NumFloat | BinaryFloat | BinaryDouble => f64 }
-        { Blob => Vec<u8>}
-        { Clob | VarChar | Char | NVarChar | NChar => String }
+        { Blob | Raw  => Vec<u8> }
+        { Clob | VarChar | Char | NVarChar | NChar | IntervalDS | IntervalYM => String }
         { Date | Timestamp | TimestampNano => NaiveDateTime }
-        { TimestampTz | TimestampTzNano => DateTime<Utc> }
+        { TimestampTz | TimestampTzNano | TimestampLTZ | TimestampLTZNano => DateTime<Utc> }
     }
 }
 
@@ -61,6 +66,13 @@ impl<'a> From<&'a OracleType> for OracleTypeSystem {
             | OracleType::TimestampTZ(8)
             | OracleType::TimestampTZ(9) => TimestampTzNano(true),
             OracleType::TimestampTZ(_) => TimestampTz(true),
+            OracleType::TimestampLTZ(7)
+            | OracleType::TimestampLTZ(8)
+            | OracleType::TimestampLTZ(9) => TimestampLTZNano(true),
+            OracleType::TimestampLTZ(_) => TimestampLTZ(true),
+            OracleType::IntervalDS(_, _) => IntervalDS(true),
+            OracleType::IntervalYM(_) => IntervalYM(true),
+            OracleType::Raw(_) => Raw(true),
             _ => unimplemented!("{}", format!("Type {:?} not implemented for oracle!", ty)),
         }
     }
